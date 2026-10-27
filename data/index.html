@@ -856,10 +856,10 @@ body.login-page {
                     <h2 class="page-title">👆 Manual Bell</h2>
                     <div class="card">
                         <h2>Manual Bell Actuation</h2>
-                        <p class="text-muted">Trigger the bell via the isolated relay actuator. Every ring — scheduled or manual — lasts exactly 5 seconds.</p>
+                        <p class="text-muted">Trigger the bell via the isolated relay actuator. Every ring — scheduled or manual — lasts exactly 10 seconds.</p>
 
                         <div style="max-width: 320px; margin: 24px auto 0;">
-                            <button class="btn btn-primary btn-lg" onclick="triggerBell()">🔔 Trigger Bell (5s)</button>
+                            <button class="btn btn-primary btn-lg" onclick="triggerBell()">🔔 Trigger Bell (10s)</button>
                         </div>
 
                         <div style="margin-top: 18px; text-align: center;">
@@ -1517,7 +1517,7 @@ async function saveAllSchedules() {
 }
 
 // Manual Bell Triggers
-// Every trigger — scheduled or manual — rings for a fixed 5 seconds; there's
+// Every trigger — scheduled or manual — rings for a fixed 10 seconds; there's
 // no pattern or duration to choose.
 async function triggerBell() {
     try {

@@ -56,7 +56,7 @@ void RelayManager::update() {
     // Edge-triggered: a ring is fired once per LOW-going press, and requires
     // the button to be released (HIGH) again before it can re-fire. Without
     // this latch, a button held down (or a stuck/shorted button line) would
-    // re-trigger ring() the instant each 5s ring finished, cycling the relay
+    // re-trigger ring() the instant each ring finished, cycling the relay
     // on/off forever.
     if (_manualButtonPin >= 0) {
         int reading = digitalRead(_manualButtonPin);

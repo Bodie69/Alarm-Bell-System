@@ -537,7 +537,7 @@ async function saveAllSchedules() {
 }
 
 // Manual Bell Triggers
-// Every trigger — scheduled or manual — rings for a fixed 5 seconds; there's
+// Every trigger — scheduled or manual — rings for a fixed 10 seconds; there's
 // no pattern or duration to choose.
 async function triggerBell() {
     try {

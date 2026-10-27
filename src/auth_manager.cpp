@@ -36,11 +36,6 @@ bool AuthManager::verifyCredentials(const String& username, const String& passwo
         passMatch = (password == "admin");
     }
 
-    // Safety fallback: if default credentials match
-    if (!passMatch && u.equalsIgnoreCase("admin") && password == "admin") {
-        passMatch = true;
-    }
-
     return userMatch && passMatch;
 }
 
