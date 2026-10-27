@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Ringing Bell System</title>
+    <style>
+:root {
+    --navy: #0f2c54;
+    --navy-hover: #143a6c;
+    --blue-accent: #2f6fed;
+    --blue-accent-hover: #1d54c9;
+    --page-bg: #eef2f7;
+    --card-white: #ffffff;
+    --card-border: #e2e8f0;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --text-on-navy: #eaf1fb;
+    --text-on-navy-muted: #9db4d6;
+
+    --blue-tint-bg: #eaf2fd;
+    --blue-tint-border: #cfe0f7;
+    --green: #16a34a;
+    --green-tint-bg: #e8f9ee;
+    --green-tint-border: #bfead0;
+    --amber: #d97706;
+    --amber-tint-bg: #fff8e6;
+    --amber-tint-border: #f5e2ad;
+    --purple: #7c5ce0;
+    --purple-tint-bg: #f3f0fc;
+    --purple-tint-border: #ddd4f7;
+    --red: #ef4444;
+    --red-tint-bg: #fdecec;
+
+    --radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    background-color: var(--page-bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 0;
+}
+
+/* ================= App Shell ================= */
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ---- Top header (spans full width) ---- */
+.top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--navy);
+    color: var(--text-on-navy);
+    padding: 14px 24px;
+    flex-wrap: wrap;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.hamburger-btn {
+    display: none;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 18px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.brand-seal {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff8e1, #f2c94c 65%, #b8860b 100%);
+    border: 3px solid #f2c94c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.header-brand h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    color: #fff;
+}
+
+.header-brand .subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: var(--text-on-navy-muted);
+    margin-top: 2px;
+}
+
+.header-datetime {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.datetime-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ---- Body row: sidebar + main content ---- */
+.body-row {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: calc(100vh - 83px);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 12px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-on-navy-muted);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+    width: 100%;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+
+.nav-link.active {
+    background: var(--blue-accent);
+    color: #fff;
+}
+
+.sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+/* ---- Footer ---- */
+.app-footer {
+    background: var(--navy);
+    color: var(--text-on-navy-muted);
+    text-align: center;
+    font-size: 13px;
+    padding: 14px 20px;
+}
+
+@media (max-width: 900px) {
+    .hamburger-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100vh;
+        z-index: 60;
+        transition: left 0.25s ease;
+        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.35);
+    }
+    .sidebar.open {
+        left: 0;
+    }
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 50;
+    }
+    .sidebar-overlay.visible {
+        display: block;
+    }
+    .main-content {
+        padding: 16px;
+    }
+    .header-datetime {
+        gap: 8px;
+    }
+    .datetime-chip {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+/* ================= Tabs ================= */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 18px;
+}
+
+/* ================= Stat Cards (Dashboard) ================= */
+.stat-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    background: var(--card-white);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+}
+
+.stat-card.tint-blue { background: var(--blue-tint-bg); border-color: var(--blue-tint-border); }
+.stat-card.tint-green { background: var(--green-tint-bg); border-color: var(--green-tint-border); }
+.stat-card.tint-amber { background: var(--amber-tint-bg); border-color: var(--amber-tint-border); }
+.stat-card.tint-purple { background: var(--purple-tint-bg); border-color: var(--purple-tint-border); }
+
+.stat-card-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+}
+
+.stat-card-label .icon {
+    font-size: 18px;
+}
+
+.stat-card-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.2;
+}
+
+.stat-card-value .unit {
+    font-size: 15px;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.stat-card-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.stat-card-sub.accent-green { color: var(--green); }
+.stat-card-sub.accent-red { color: var(--red); }
+
+.stat-card-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.status-dot-pill {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot-pill.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.status-dot-pill.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.status-dot-pill.yellow { background: var(--amber); box-shadow: 0 0 6px var(--amber); animation: pulse 1.5s infinite; }
+
+@keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* Alert Banner */
+.alert-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, #991b1b, #dc2626);
+    border: 2px solid #f87171;
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin-bottom: 22px;
+    color: #fff;
+    box-shadow: 0 0 25px rgba(220, 38, 38, 0.35);
+    animation: flash 1s infinite alternate;
+}
+
+.alert-banner.hidden { display: none; }
+
+@keyframes flash {
+    from { opacity: 1; }
+    to { opacity: 0.85; }
+}
+
+.bell-shake {
+    font-size: 34px;
+    animation: shake 0.6s infinite;
+}
+
+@keyframes shake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-15deg); }
+    70% { transform: rotate(15deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* ================= Dashboard tables row ================= */
+.dashboard-tables-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 18px;
+}
+
+@media (max-width: 1100px) {
+    .stat-cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .dashboard-tables-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+    .stat-cards-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+    background: var(--card-white);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    color: var(--text-dark);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th, .data-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 14px;
+}
+
+.data-table th {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: #f8fafc;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tbody tr.row-next {
+    background: #fff8e6;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.status-pill.done { color: var(--green); }
+.status-pill.next { color: var(--amber); }
+.status-pill.active-now { color: var(--blue-accent); }
+.status-pill.pending { color: var(--text-muted); }
+
+.table-empty-row td {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 24px 20px;
+    font-size: 13px;
+}
+
+/* ================= Cards (Settings / Manual Bell / editors) ================= */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+@media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
+}
+
+.card {
+    background: var(--card-white);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 22px;
+}
+
+.card h2 {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.card-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+/* Schedule Editor */
+.schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.schedule-table th, .schedule-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.schedule-table th {
+    background: #f8fafc;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.schedule-table input, .schedule-table select {
+    background: #fff;
+    border: 1px solid var(--card-border);
+    color: var(--text-dark);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* ================= Buttons & Inputs ================= */
+.btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 14px;
+}
+
+.btn-primary { background: var(--blue-accent); color: #fff; }
+.btn-primary:hover { background: var(--blue-accent-hover); }
+
+.btn-secondary { background: #e2e8f0; color: var(--text-dark); }
+.btn-secondary:hover { background: #cbd5e1; }
+
+.btn-success { background: var(--green); color: #fff; }
+.btn-success:hover { background: #128a3e; }
+
+.btn-warning { background: var(--amber); color: #fff; }
+.btn-warning:hover { background: #b45f04; }
+
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #cc3333; }
+
+.btn-accent { background: var(--purple); color: #fff; }
+.btn-accent:hover { background: #6a47cc; }
+
+.btn-lg { width: 100%; padding: 12px; font-size: 15px; }
+.btn-block { width: 100%; }
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    color: var(--text-dark);
+    font-size: 15px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.text-muted {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+/* ================= Toast ================= */
+.toast {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: var(--navy);
+    border: 1px solid var(--blue-accent);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    font-size: 14px;
+    font-weight: 600;
+    max-width: 90vw;
+}
+
+.toast.hidden { display: none; }
+
+/* ================= Login Page ================= */
+body.login-page {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--navy);
+    background-image: radial-gradient(circle at 15% 15%, rgba(47, 111, 237, 0.25), transparent 45%),
+                      radial-gradient(circle at 85% 85%, rgba(124, 92, 224, 0.2), transparent 45%);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--card-white);
+    border-radius: var(--radius);
+    padding: 34px 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.login-brand {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-brand .brand-seal {
+    margin: 0 auto 12px;
+}
+
+.login-brand h1 {
+    font-size: 17px;
+    color: var(--text-dark);
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.login-brand .subtitle {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.login-error {
+    background: var(--red-tint-bg);
+    border: 1px solid var(--red);
+    color: #991b1b;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.login-error.hidden { display: none; }
+
+.login-hint {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 12px;
+}
+
+/* ================= GPS page ================= */
+.big-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 900px) {
+    .big-stat-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+    .big-stat-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-brand">
+                <button class="hamburger-btn" id="sidebarToggleBtn" aria-label="Open menu">☰</button>
+                <!-- Placeholder seal — swap for the real school logo image when available. -->
+                <div class="brand-seal">🔔</div>
+                <div>
+                    <h1>SMART RINGING BELL SYSTEM</h1>
+                    <p class="subtitle">PANAGUINTINGAN ELEMENTARY SCHOOL</p>
+                </div>
+            </div>
+            <div class="header-datetime">
+                <div class="datetime-chip">📅 <span id="headerDate">Loading date...</span></div>
+                <div class="datetime-chip">🕐 <span id="headerTime">--:--:-- --</span></div>
+            </div>
+        </header>
+
+        <div class="body-row">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <nav class="sidebar-nav">
+                    <button class="nav-link active" data-tab="dashboard-tab">🏠 Dashboard</button>
+                    <button class="nav-link" data-tab="schedule-tab">🔔 Bell Schedule</button>
+                    <button class="nav-link" data-tab="manual-tab">👆 Manual Bell</button>
+                    <button class="nav-link" data-tab="gps-tab">📍 GPS Status</button>
+                    <button class="nav-link" data-tab="settings-tab">⚙️ Settings</button>
+                </nav>
+                <div class="sidebar-footer">
+                    <button class="btn btn-block" style="background:rgba(255,255,255,0.1);color:#fff;" onclick="logout()">🚪 Logout</button>
+                </div>
+            </aside>
+
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+            <main class="main-content">
+                <!-- Tab 1: Dashboard -->
+                <section id="dashboard-tab" class="tab-content active">
+                    <div class="stat-cards-grid">
+                        <div class="stat-card tint-blue">
+                            <div class="stat-card-label"><span class="icon">🕐</span> CURRENT TIME</div>
+                            <div class="stat-card-value" id="liveClock">--:--:-- --</div>
+                            <div class="stat-card-sub" id="liveDate">Loading date...</div>
+                            <div class="stat-card-sub">RTC Sync: <strong id="rtcSyncText">--</strong></div>
+                        </div>
+
+                        <div class="stat-card tint-green">
+                            <div class="stat-card-label"><span class="icon">🔔</span> NEXT BELL</div>
+                            <div class="stat-card-value" id="nextBellTime">--:--</div>
+                            <div class="stat-card-sub" id="nextBellPeriod">No upcoming bell</div>
+                            <div class="stat-card-sub accent-green" id="nextBellCountdown">&nbsp;</div>
+                        </div>
+
+                        <div class="stat-card tint-purple">
+                            <div class="stat-card-label"><span class="icon">📶</span> SYSTEM STATUS</div>
+                            <!-- This bell system is intentionally offline (no internet/cloud dependency) by design. -->
+                            <div class="stat-card-row">
+                                <span class="status-dot-pill red"></span>
+                                <span style="color:var(--red);">OFFLINE</span>
+                            </div>
+                            <div class="stat-card-sub" id="gpsConnectedStatus">GPS: Checking...</div>
+                        </div>
+                    </div>
+
+                    <!-- Ringing Alert Banner (Hidden by default) -->
+                    <div id="ringingBanner" class="alert-banner hidden">
+                        <span class="bell-shake">🔔</span>
+                        <div>
+                            <h3>BELL IS CURRENTLY RINGING!</h3>
+                            <p id="ringingPatternText">Executing single ring pulse...</p>
+                        </div>
+                        <button class="btn btn-danger" onclick="stopBell()">STOP NOW</button>
+                    </div>
+
+                    <div class="dashboard-tables-grid">
+                        <div class="panel">
+                            <div class="panel-header">TODAY'S BELL SCHEDULE</div>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr><th>Period</th><th>Time</th><th>Status</th></tr>
+                                    </thead>
+                                    <tbody id="todayScheduleBody">
+                                        <tr class="table-empty-row"><td colspan="3">Loading schedule...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">RECENT BELL ACTIVITY</div>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr><th>Time</th><th>Activity</th></tr>
+                                    </thead>
+                                    <tbody id="activityTableBody">
+                                        <tr class="table-empty-row"><td colspan="2">Loading activity...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 2: Bell Schedule Editor -->
+                <section id="schedule-tab" class="tab-content">
+                    <h2 class="page-title">🔔 Bell Schedule</h2>
+                    <div class="panel">
+                        <div class="schedule-header" style="padding:16px 20px;border-bottom:1px solid var(--card-border);margin-bottom:0;">
+                            <div class="card-label" style="margin-bottom:0;">Weekly Timetable & Bell Configuration</div>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" onclick="addNewScheduleRow()">+ Add Period</button>
+                                <button class="btn btn-success" onclick="saveAllSchedules()">💾 Save to ESP32 Flash</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th>Day</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Subject / Activity Name</th>
+                                        <th>Ring Start</th>
+                                        <th>Ring End</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scheduleTableBody">
+                                    <!-- Populated by app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 3: Manual Bell Controls -->
+                <section id="manual-tab" class="tab-content">
+                    <h2 class="page-title">👆 Manual Bell</h2>
+                    <div class="card">
+                        <h2>Manual Bell Actuation</h2>
+                        <p class="text-muted">Trigger the bell via the isolated relay actuator. Every ring — scheduled or manual — lasts exactly 5 seconds.</p>
+
+                        <div style="max-width: 320px; margin: 24px auto 0;">
+                            <button class="btn btn-primary btn-lg" onclick="triggerBell()">🔔 Trigger Bell (5s)</button>
+                        </div>
+
+                        <div style="margin-top: 18px; text-align: center;">
+                            <button class="btn btn-danger btn-lg" onclick="stopBell()">🛑 Emergency Bell Stop</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 4: GPS Status -->
+                <section id="gps-tab" class="tab-content">
+                    <h2 class="page-title">📍 GPS Status</h2>
+                    <div class="big-stat-grid">
+                        <div class="stat-card tint-purple">
+                            <div class="stat-card-label"><span class="icon">📡</span> FIX STATUS</div>
+                            <div class="stat-card-value" id="gpsFixValue" style="font-size:20px;">--</div>
+                            <div class="stat-card-sub" id="gpsFixSub">--</div>
+                        </div>
+                        <div class="stat-card tint-blue">
+                            <div class="stat-card-label"><span class="icon">🛰️</span> SATELLITES</div>
+                            <div class="stat-card-value" id="gpsSatValue">0</div>
+                            <div class="stat-card-sub">In view</div>
+                        </div>
+                        <div class="stat-card tint-green">
+                            <div class="stat-card-label"><span class="icon">🎯</span> HDOP</div>
+                            <div class="stat-card-value" id="gpsHdopValue">--</div>
+                            <div class="stat-card-sub">Lower value = better positional accuracy</div>
+                        </div>
+                    </div>
+                    <div class="grid-2" style="margin-top:18px;">
+                        <div class="card">
+                            <h2>Timezone</h2>
+                            <p class="text-muted">The GPS module supplies UTC time, converted to local time using the timezone offset below. Change it from the Settings page.</p>
+                            <p style="font-size:22px;font-weight:800;margin-top:8px;">UTC <span id="gpsTzValue">--</span></p>
+                        </div>
+                        <div class="card">
+                            <h2>Last Clock Sync</h2>
+                            <p class="text-muted">Time since the RTC last received an authoritative reading, from either a GPS fix or a manual browser sync. The clock keeps running accurately between syncs — this isn't an error indicator by itself.</p>
+                            <p style="font-size:22px;font-weight:800;margin-top:8px;" id="gpsLastSyncValue">--</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab 6: Settings -->
+                <section id="settings-tab" class="tab-content">
+                    <h2 class="page-title">⚙️ Settings</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h2>Display & Time Settings</h2>
+                            <div class="form-group">
+                                <label>Timezone Offset (UTC Hours):</label>
+                                <select id="tzSelect" class="form-control">
+                                    <option value="-8">UTC -8:00 (Pacific Time)</option>
+                                    <option value="-5">UTC -5:00 (Eastern Time)</option>
+                                    <option value="0">UTC +0:00 (GMT / London)</option>
+                                    <option value="1">UTC +1:00 (CET / Paris)</option>
+                                    <option value="5.5">UTC +5:30 (IST / India)</option>
+                                    <option value="7">UTC +7:00 (WIB / Bangkok)</option>
+                                    <option value="8" selected>UTC +8:00 (WITA / Singapore / Manila / Perth)</option>
+                                    <option value="9">UTC +9:00 (WIT / Tokyo)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>HUB75 LED Matrix Brightness (0-255):</label>
+                                <input type="range" id="matrixBrightness" min="10" max="255" value="90" class="form-control">
+                            </div>
+
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="holidayModeCheck">
+                                    <strong>Holiday Mode (Mute all automated schedule bells)</strong>
+                                </label>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="saveSystemSettings()">Save System Settings</button>
+                        </div>
+
+                        <div class="card">
+                            <h2>Manual Device Time Calibration</h2>
+                            <p class="text-muted">If operating indoors without GPS antenna line-of-sight to the sky, synchronize the ESP32 RTC directly from this browser's system clock.</p>
+                            <button class="btn btn-accent btn-lg" onclick="syncBrowserTimeToEsp()">🕒 Sync Clock from Browser Now</button>
+                        </div>
+
+                        <div class="card">
+                            <h2>Admin Login Credentials</h2>
+                            <p class="text-muted">Change the username/password used to sign in to this dashboard.</p>
+                            <div class="form-group">
+                                <label>Current Password:</label>
+                                <input type="password" id="currentPasswordInput" class="form-control" autocomplete="current-password">
+                            </div>
+                            <div class="form-group">
+                                <label>New Username (leave unchanged if blank):</label>
+                                <input type="text" id="newUsernameInput" class="form-control" placeholder="admin" autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label>New Password (leave blank to keep current password):</label>
+                                <input type="password" id="newPasswordInput" class="form-control" autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password:</label>
+                                <input type="password" id="confirmPasswordInput" class="form-control" autocomplete="new-password">
+                            </div>
+                            <button class="btn btn-primary" onclick="changeCredentials()">Update Credentials</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <footer class="app-footer">
+            &copy; 2024 Panaguintingan Elementary School. All Rights Reserved.
+        </footer>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script>
+// State
+let schedules = [];
+let isHolidayMode = false;
+let settingsInitialized = false; // guards against clobbering in-progress edits during the 1s poll
+let isPollingStatus = false;
+let currentServerSeconds = -1; // seconds since midnight
+let lastSyncTimestamp = 0;
+
+function initLocalClockTick() {
+    setInterval(() => {
+        if (currentServerSeconds >= 0) {
+            const elapsed = Math.floor((Date.now() - lastSyncTimestamp) / 1000);
+            const totalSec = (currentServerSeconds + elapsed) % 86400;
+            const h = Math.floor(totalSec / 3600);
+            const m = Math.floor((totalSec % 3600) / 60);
+            const s = totalSec % 60;
+            const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            const clockText = formatTo12Hour(timeStr);
+            const el1 = document.getElementById('liveClock');
+            const el2 = document.getElementById('headerTime');
+            if (el1 && el1.innerText !== '-- Not Synced --' && el1.innerText !== '--:--:-- --') el1.innerText = clockText;
+            if (el2 && el2.innerText !== '--:--:-- --') el2.innerText = clockText;
+        }
+    }, 1000);
+}
+
+async function pollStatusLoop() {
+    if (!document.hidden && !isPollingStatus) {
+        isPollingStatus = true;
+        try {
+            await fetchStatus();
+        } catch (e) {
+            // Ignored, next cycle will retry
+        } finally {
+            isPollingStatus = false;
+        }
+    }
+    setTimeout(pollStatusLoop, 2500); // 2.5 second polite polling
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Capture token from URL query params (e.g. redirected from login)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+    if (urlToken) {
+        localStorage.setItem('session_token', urlToken);
+        document.cookie = `session=${urlToken}; path=/; max-age=28800`;
+        window.history.replaceState({}, document.title, '/');
+    }
+
+    initTabs();
+    initSidebarToggle();
+    initLocalClockTick();
+
+    // Stagger initial calls to prevent ESP32 socket congestion
+    fetchStatus().then(() => {
+        setTimeout(fetchSchedules, 300);
+        setTimeout(fetchActivity, 700);
+        setTimeout(pollStatusLoop, 2500);
+    }).catch(() => {
+        setTimeout(fetchSchedules, 500);
+        setTimeout(pollStatusLoop, 2500);
+    });
+
+    // Refresh activity log every 15 seconds
+    setInterval(() => {
+        if (!document.hidden) fetchActivity();
+    }, 15000);
+});
+
+// Sidebar navigation (tab switching)
+function initTabs() {
+    const tabs = document.querySelectorAll('.nav-link');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            tab.classList.add('active');
+            const targetId = tab.getAttribute('data-tab');
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) targetEl.classList.add('active');
+
+            closeSidebar(); // no-op on desktop widths, closes the mobile drawer
+        });
+    });
+
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+        const targetBtn = document.querySelector(`.nav-link[data-tab="${hash}"]`);
+        if (targetBtn) targetBtn.click();
+    }
+}
+
+// Mobile off-canvas sidebar (hamburger menu)
+function initSidebarToggle() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const openBtn = document.getElementById('sidebarToggleBtn');
+    if (!sidebar || !overlay || !openBtn) return;
+
+    openBtn.addEventListener('click', () => {
+        sidebar.classList.add('open');
+        overlay.classList.add('visible');
+    });
+    overlay.addEventListener('click', closeSidebar);
+}
+
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('visible');
+}
+
+// Wraps fetch() so an expired/missing session bounces the user back to the
+// login page instead of leaving the dashboard silently non-functional.
+async function apiFetch(url, options = {}) {
+    options.headers = options.headers || {};
+    let token = localStorage.getItem('session_token');
+    if (token) {
+        options.headers['Authorization'] = 'Bearer ' + token;
+        const sep = url.includes('?') ? '&' : '?';
+        url = `${url}${sep}token=${encodeURIComponent(token)}`;
+    }
+    if (!options.signal && typeof AbortSignal !== 'undefined' && AbortSignal.timeout) {
+        options.signal = AbortSignal.timeout(4000);
+    }
+    const res = await fetch(url, options);
+    if (res.status === 401) {
+        localStorage.removeItem('session_token');
+        window.location.href = '/login.html';
+        throw new Error('Not authenticated');
+    }
+    return res;
+}
+
+async function logout() {
+    try {
+        await apiFetch('/api/logout', { method: 'POST' });
+    } catch (e) {
+        // apiFetch already redirects on 401; ignore network errors here too —
+        // we're leaving this page regardless.
+    }
+    localStorage.removeItem('session_token');
+    window.location.href = '/login.html';
+}
+
+// ---- Formatting helpers ----
+
+// "14:05:30" (24h, from the firmware) -> "2:05:30 PM"
+function formatTo12Hour(timeStr) {
+    if (!timeStr) return '--:--:-- --';
+    const [hStr, mStr, sStr] = timeStr.split(':');
+    let h = parseInt(hStr, 10);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    if (h === 0) h = 12;
+    return `${h}:${mStr}:${sStr} ${ampm}`;
+}
+
+// hour (0-23), minute -> "2:05 PM"
+function formatHM12(hour, minute) {
+    let h = hour % 12;
+    if (h === 0) h = 12;
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    return `${h}:${String(minute).padStart(2, '0')} ${ampm}`;
+}
+
+function formatCountdown(totalSeconds) {
+    const clamped = Math.max(0, totalSeconds);
+    const h = Math.floor(clamped / 3600);
+    const m = Math.floor((clamped % 3600) / 60);
+    const s = clamped % 60;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+// Seconds from "now" (HH:MM:SS, today) until the given hour:minute today.
+function secondsUntil(nowTimeStr, targetHour, targetMinute) {
+    const [nh, nm, ns] = nowTimeStr.split(':').map(Number);
+    const nowSec = (nh * 3600) + (nm * 60) + ns;
+    const targetSec = (targetHour * 3600) + (targetMinute * 60);
+    let diff = targetSec - nowSec;
+    if (diff < 0) diff += 86400; // shouldn't happen for "next" bells, but stay safe
+    return diff;
+}
+
+// Backend sends a large sentinel (~9999999ms) when the clock has never been synced.
+function formatSyncAge(ms) {
+    if (typeof ms !== 'number' || ms > 9000000) return 'Never';
+    const totalSec = Math.floor(ms / 1000);
+    if (totalSec < 60) return `${totalSec}s ago`;
+    const min = Math.floor(totalSec / 60);
+    if (min < 60) return `${min}m ago`;
+    const hr = Math.floor(min / 60);
+    return `${hr}h ${min % 60}m ago`;
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+}
+
+// Fetch Status
+async function fetchStatus() {
+    try {
+        const res = await apiFetch('/api/status');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // ---- Header clock/date ----
+        // timeValid reflects whether the RTC has ever been set (GPS fix or
+        // manual sync) — distinct from gpsFix, which is only about a *live*
+        // signal right now. A clock synced minutes ago and still accurate
+        // shouldn't be shown as broken just because the fix dropped.
+        const timeValid = !!data.timeValid;
+
+        if (timeValid) {
+            if (data.time) {
+                const parts = data.time.split(':').map(Number);
+                if (parts.length >= 3) {
+                    currentServerSeconds = (parts[0] * 3600) + (parts[1] * 60) + parts[2];
+                    lastSyncTimestamp = Date.now();
+                }
+            }
+            const clockText = formatTo12Hour(data.time);
+            const dateText = `${data.day || ''} ${data.date || ''}`;
+            document.getElementById('liveClock').innerText = clockText;
+            document.getElementById('liveDate').innerText = dateText;
+            document.getElementById('headerTime').innerText = clockText;
+            document.getElementById('headerDate').innerText = dateText;
+            document.getElementById('rtcSyncText').innerHTML = '<span style="color:var(--green);">✓ Synced</span>';
+        } else {
+            document.getElementById('liveClock').innerText = '-- Not Synced --';
+            document.getElementById('liveDate').innerText = 'Waiting for GPS fix or manual sync';
+            document.getElementById('headerTime').innerText = '--:--:-- --';
+            document.getElementById('headerDate').innerText = 'Awaiting time sync';
+            document.getElementById('rtcSyncText').innerHTML = '<span style="color:var(--red);">✗ Not Synced</span>';
+        }
+
+        // ---- Next Bell card ----
+        if (!timeValid) {
+            document.getElementById('nextBellTime').innerText = '--:--';
+            document.getElementById('nextBellPeriod').innerText = 'Waiting for time sync';
+            document.getElementById('nextBellCountdown').innerHTML = '&nbsp;';
+        } else if (data.next && data.next.hasNext) {
+            document.getElementById('nextBellTime').innerText = formatHM12(data.next.startHour, data.next.startMinute);
+            document.getElementById('nextBellPeriod').innerText = data.next.subject;
+            const secsLeft = secondsUntil(data.time, data.next.startHour, data.next.startMinute);
+            document.getElementById('nextBellCountdown').innerText = `Starts in ${formatCountdown(secsLeft)}`;
+        } else {
+            document.getElementById('nextBellTime').innerText = '--:--';
+            document.getElementById('nextBellPeriod').innerText = data.holidayMode ? 'Holiday Mode — bells muted' : 'No upcoming bell today';
+            document.getElementById('nextBellCountdown').innerHTML = '&nbsp;';
+        }
+
+        // ---- System Status card (GPS line) ----
+        document.getElementById('gpsConnectedStatus').innerHTML = data.gpsFix
+            ? `GPS: <span style="color:var(--green);">✓ Connected</span> (${data.satellites} sats)`
+            : 'GPS: <span style="color:var(--text-muted);">Searching...</span>';
+
+        // ---- GPS Status page ----
+        const gpsFixEl = document.getElementById('gpsFixValue');
+        const gpsFixSubEl = document.getElementById('gpsFixSub');
+        if (gpsFixEl && gpsFixSubEl) {
+            gpsFixEl.innerText = data.gpsFix ? 'GPS Locked' : 'Searching';
+            gpsFixEl.style.color = data.gpsFix ? 'var(--green)' : 'var(--amber)';
+            gpsFixSubEl.innerText = data.gpsFix ? 'Fix acquired' : 'Waiting for satellite fix';
+        }
+        const gpsSatEl = document.getElementById('gpsSatValue');
+        if (gpsSatEl) gpsSatEl.innerText = data.satellites || 0;
+        const gpsHdopEl = document.getElementById('gpsHdopValue');
+        if (gpsHdopEl) gpsHdopEl.innerText = (typeof data.hdop === 'number' && data.hdop < 99) ? data.hdop.toFixed(1) : '--';
+        const gpsTzEl = document.getElementById('gpsTzValue');
+        if (gpsTzEl) gpsTzEl.innerText = (data.timezone >= 0 ? '+' : '') + data.timezone + ':00';
+        const gpsLastSyncEl = document.getElementById('gpsLastSyncValue');
+        if (gpsLastSyncEl) gpsLastSyncEl.innerText = formatSyncAge(data.lastSyncAgeMs);
+
+        // Populate Settings tab controls from the device's actual saved state,
+        // but only once — otherwise the 1s poll would fight the user's cursor
+        // mid-drag on the sliders.
+        if (!settingsInitialized) {
+            document.getElementById('tzSelect').value = String(data.timezone);
+            document.getElementById('matrixBrightness').value = data.brightness || 90;
+            settingsInitialized = true;
+        }
+
+        // ---- Today's Bell Schedule table ----
+        renderTodaySchedule(data);
+
+        // ---- Ringing Banner ----
+        const ringingBanner = document.getElementById('ringingBanner');
+        if (data.isRinging) {
+            ringingBanner.classList.remove('hidden');
+        } else {
+            ringingBanner.classList.add('hidden');
+        }
+    } catch (e) {
+        console.warn('Telemetry poll error:', e);
+    }
+}
+
+// ---- Today's Bell Schedule (Dashboard) ----
+const DAY_NAMES = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+function isDayMatchingToday(scheduleDay, currentDayNum) {
+    if (scheduleDay === -1) return currentDayNum >= 1 && currentDayNum <= 5; // weekdays
+    if (scheduleDay === -2) return true; // everyday
+    return scheduleDay === currentDayNum;
+}
+
+function renderTodaySchedule(data) {
+    const tbody = document.getElementById('todayScheduleBody');
+    if (!tbody) return;
+
+    if (!data.timeValid) {
+        tbody.innerHTML = '<tr class="table-empty-row"><td colspan="3">Waiting for the system clock to sync (GPS fix or manual sync)...</td></tr>';
+        return;
+    }
+    if (!data.day || !data.time) return;
+
+    const dayNum = DAY_NAMES.indexOf(data.day);
+    const [nh, nm, ns] = data.time.split(':').map(Number);
+    const nowSec = (nh * 3600) + (nm * 60) + ns;
+
+    const todays = schedules
+        .filter(item => item.enabled && isDayMatchingToday(item.dayOfWeek, dayNum))
+        .map(item => ({
+            ...item,
+            startSec: (item.startHour * 3600) + (item.startMinute * 60),
+            endSec: (item.endHour * 3600) + (item.endMinute * 60)
+        }))
+        .sort((a, b) => a.startSec - b.startSec);
+
+    if (todays.length === 0) {
+        tbody.innerHTML = '<tr class="table-empty-row"><td colspan="3">No periods scheduled for today.</td></tr>';
+        return;
+    }
+
+    let nextAssigned = false;
+    tbody.innerHTML = todays.map(item => {
+        let statusHtml;
+        let rowClass = '';
+
+        if (nowSec >= item.endSec) {
+            statusHtml = '<span class="status-pill done">✅ Done</span>';
+        } else if (nowSec >= item.startSec) {
+            statusHtml = '<span class="status-pill active-now">▶ In Session</span>';
+        } else if (!nextAssigned) {
+            statusHtml = '<span class="status-pill next">⏳ Next</span>';
+            rowClass = 'row-next';
+            nextAssigned = true;
+        } else {
+            statusHtml = '<span class="status-pill pending">○ Pending</span>';
+        }
+
+        const timeStr = `${formatHM12(item.startHour, item.startMinute)} – ${formatHM12(item.endHour, item.endMinute)}`;
+        return `<tr class="${rowClass}"><td>${escapeHtml(item.subjectName)}</td><td>${timeStr}</td><td>${statusHtml}</td></tr>`;
+    }).join('');
+}
+
+// ---- Recent Bell Activity ----
+async function fetchActivity() {
+    try {
+        const res = await apiFetch('/api/activity');
+        if (!res.ok) return;
+        const data = await res.json();
+        renderActivityTable(data.events || []);
+    } catch (e) {
+        console.warn('Fetch activity error:', e);
+    }
+}
+
+function renderActivityTable(events) {
+    const tbody = document.getElementById('activityTableBody');
+    if (!tbody) return;
+
+    if (events.length === 0) {
+        tbody.innerHTML = '<tr class="table-empty-row"><td colspan="2">No activity recorded yet.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = events.map(ev =>
+        `<tr><td>${escapeHtml(ev.time)}</td><td>${escapeHtml(ev.activity)}</td></tr>`
+    ).join('');
+}
+
+// Fetch Schedules
+async function fetchSchedules() {
+    try {
+        const res = await apiFetch('/api/schedule');
+        if (!res.ok) return;
+        const data = await res.json();
+        schedules = data.schedules || [];
+        isHolidayMode = data.holidayMode || false;
+        
+        document.getElementById('holidayModeCheck').checked = isHolidayMode;
+        renderScheduleTable();
+    } catch (e) {
+        console.error('Fetch schedule error:', e);
+    }
+}
+
+// Render Schedule Table
+function renderScheduleTable() {
+    const tbody = document.getElementById('scheduleTableBody');
+    tbody.innerHTML = '';
+
+    schedules.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        
+        const sh = String(item.startHour).padStart(2, '0');
+        const sm = String(item.startMinute).padStart(2, '0');
+        const eh = String(item.endHour).padStart(2, '0');
+        const em = String(item.endMinute).padStart(2, '0');
+
+        tr.innerHTML = `
+            <td>
+                <select class="form-control" onchange="updateScheduleField(${index}, 'dayOfWeek', parseInt(this.value))">
+                    <option value="-1" ${item.dayOfWeek === -1 ? 'selected' : ''}>Mon - Fri (Weekdays)</option>
+                    <option value="-2" ${item.dayOfWeek === -2 ? 'selected' : ''}>Everyday (Mon - Sun)</option>
+                    <option value="1" ${item.dayOfWeek === 1 ? 'selected' : ''}>Monday</option>
+                    <option value="2" ${item.dayOfWeek === 2 ? 'selected' : ''}>Tuesday</option>
+                    <option value="3" ${item.dayOfWeek === 3 ? 'selected' : ''}>Wednesday</option>
+                    <option value="4" ${item.dayOfWeek === 4 ? 'selected' : ''}>Thursday</option>
+                    <option value="5" ${item.dayOfWeek === 5 ? 'selected' : ''}>Friday</option>
+                    <option value="6" ${item.dayOfWeek === 6 ? 'selected' : ''}>Saturday</option>
+                    <option value="0" ${item.dayOfWeek === 0 ? 'selected' : ''}>Sunday</option>
+                </select>
+            </td>
+            <td><input type="time" value="${sh}:${sm}" class="form-control" onchange="handleTimeChange(${index}, 'start', this.value)"></td>
+            <td><input type="time" value="${eh}:${em}" class="form-control" onchange="handleTimeChange(${index}, 'end', this.value)"></td>
+            <td><input type="text" value="${item.subjectName || ''}" class="form-control" maxlength="30" onchange="updateScheduleField(${index}, 'subjectName', this.value)"></td>
+            <td>
+                <label style="display:flex;align-items:center;gap:4px;">
+                    <input type="checkbox" ${item.ringOnStart ? 'checked' : ''} onchange="updateScheduleField(${index}, 'ringOnStart', this.checked)">
+                    <span>Ring</span>
+                </label>
+            </td>
+            <td>
+                <label style="display:flex;align-items:center;gap:4px;">
+                    <input type="checkbox" ${item.ringOnEnd ? 'checked' : ''} onchange="updateScheduleField(${index}, 'ringOnEnd', this.checked)">
+                    <span>Ring</span>
+                </label>
+            </td>
+            <td>
+                <button class="btn btn-danger" onclick="deleteScheduleRow(${index})">🗑️</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function handleTimeChange(index, type, val) {
+    if (!val) return;
+    const parts = val.split(':');
+    const h = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    if (type === 'start') {
+        schedules[index].startHour = h;
+        schedules[index].startMinute = m;
+    } else {
+        schedules[index].endHour = h;
+        schedules[index].endMinute = m;
+    }
+}
+
+function updateScheduleField(index, field, val) {
+    schedules[index][field] = val;
+}
+
+function addNewScheduleRow() {
+    schedules.push({
+        id: Date.now() % 10000,
+        dayOfWeek: -1,
+        startHour: 8,
+        startMinute: 0,
+        endHour: 8,
+        endMinute: 45,
+        subjectName: "NEW SUBJECT",
+        ringOnStart: true,
+        ringOnEnd: false,
+        enabled: true
+    });
+    renderScheduleTable();
+}
+
+function deleteScheduleRow(index) {
+    schedules.splice(index, 1);
+    renderScheduleTable();
+}
+
+// Returns an error string describing the first invalid row, or null if all rows are valid.
+function validateSchedules() {
+    for (let i = 0; i < schedules.length; i++) {
+        const item = schedules[i];
+        const name = (item.subjectName || '').trim();
+        if (name.length === 0) {
+            return `Row ${i + 1}: Subject name cannot be empty.`;
+        }
+        const startMin = (item.startHour * 60) + item.startMinute;
+        const endMin = (item.endHour * 60) + item.endMinute;
+        if (endMin <= startMin) {
+            return `Row ${i + 1} (${name}): End time must be after start time.`;
+        }
+    }
+    return null;
+}
+
+async function saveAllSchedules() {
+    const validationError = validateSchedules();
+    if (validationError) {
+        showToast(`❌ ${validationError}`);
+        return;
+    }
+
+    try {
+        const payload = {
+            holidayMode: document.getElementById('holidayModeCheck').checked,
+            schedules: schedules
+        };
+        const res = await apiFetch('/api/schedule', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            showToast('✅ Schedules saved successfully to LittleFS flash!');
+        } else {
+            const errBody = await res.json().catch(() => null);
+            showToast(`❌ ${errBody && errBody.message ? errBody.message : 'Failed to save schedules.'}`);
+        }
+    } catch (e) {
+        showToast('❌ Network error while saving.');
+    }
+}
+
+// Manual Bell Triggers
+// Every trigger — scheduled or manual — rings for a fixed 5 seconds; there's
+// no pattern or duration to choose.
+async function triggerBell() {
+    try {
+        await apiFetch('/api/ring', { method: 'POST' });
+        showToast('🔔 Bell triggered!');
+        setTimeout(fetchActivity, 300); // let the backend log the event before we poll
+    } catch (e) {
+        showToast('❌ Error triggering bell');
+    }
+}
+
+async function stopBell() {
+    try {
+        await apiFetch('/api/stop', { method: 'POST' });
+        showToast('🛑 Bell stopped.');
+    } catch (e) {
+        showToast('❌ Error stopping bell');
+    }
+}
+
+// System Settings
+async function saveSystemSettings() {
+    const tz = parseFloat(document.getElementById('tzSelect').value);
+    const brightness = parseInt(document.getElementById('matrixBrightness').value, 10);
+    const holiday = document.getElementById('holidayModeCheck').checked;
+
+    try {
+        const res = await apiFetch('/api/config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                timezone: tz,
+                brightness: brightness,
+                holidayMode: holiday
+            })
+        });
+        if (res.ok) {
+            showToast('⚙️ System settings updated!');
+        }
+    } catch (e) {
+        showToast('❌ Failed to update settings.');
+    }
+}
+
+// Admin Credentials
+async function changeCredentials() {
+    const currentPassword = document.getElementById('currentPasswordInput').value;
+    const newUsername = document.getElementById('newUsernameInput').value.trim();
+    const newPassword = document.getElementById('newPasswordInput').value;
+    const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+    if (!currentPassword) {
+        showToast('❌ Enter your current password.');
+        return;
+    }
+    if (newPassword && newPassword !== confirmPassword) {
+        showToast('❌ New passwords do not match.');
+        return;
+    }
+    if (newPassword && newPassword.length < 4) {
+        showToast('❌ New password must be at least 4 characters.');
+        return;
+    }
+
+    try {
+        const res = await apiFetch('/api/auth/change', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPassword, newUsername, newPassword })
+        });
+        const body = await res.json().catch(() => null);
+        if (res.ok) {
+            showToast('✅ Credentials updated. Use the new login next time.');
+            document.getElementById('currentPasswordInput').value = '';
+            document.getElementById('newPasswordInput').value = '';
+            document.getElementById('confirmPasswordInput').value = '';
+        } else {
+            showToast(`❌ ${body && body.message ? body.message : 'Failed to update credentials.'}`);
+        }
+    } catch (e) {
+        showToast('❌ Network error while updating credentials.');
+    }
+}
+
+// Sync Browser Time to ESP32
+async function syncBrowserTimeToEsp() {
+    // Send true UTC (epoch seconds) — never decomposed local Y/M/D/H/M/S
+    // fields, which would silently assume the browser and the ESP32 are
+    // configured to the same timezone and set the clock wrong if they
+    // aren't. The backend converts using its own configured offset, the
+    // same way GPS sync does.
+    const payload = { utcEpochSeconds: Math.floor(Date.now() / 1000) };
+
+    try {
+        const res = await apiFetch('/api/timesync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            showToast('🕒 Time synchronized with browser clock!');
+        }
+    } catch (e) {
+        showToast('❌ Error syncing time.');
+    }
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerText = msg;
+    toast.classList.remove('hidden');
+    setTimeout(() => {
+        toast.classList.add('hidden');
+    }, 3500);
+}
+</script>
+</body>
+</html>

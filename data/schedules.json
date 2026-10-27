@@ -1,0 +1,125 @@
+{
+  "holidayMode": false,
+  "schedules": [
+    {
+      "id": 1,
+      "dayOfWeek": -1,
+      "startHour": 7,
+      "startMinute": 30,
+      "endHour": 7,
+      "endMinute": 45,
+      "subjectName": "MORNING ASSEMBLY",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "dayOfWeek": -1,
+      "startHour": 7,
+      "startMinute": 45,
+      "endHour": 8,
+      "endMinute": 30,
+      "subjectName": "PERIOD 1: MATHEMATICS",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "dayOfWeek": -1,
+      "startHour": 8,
+      "startMinute": 30,
+      "endHour": 9,
+      "endMinute": 15,
+      "subjectName": "PERIOD 2: ENGLISH",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 4,
+      "dayOfWeek": -1,
+      "startHour": 9,
+      "startMinute": 15,
+      "endHour": 10,
+      "endMinute": 0,
+      "subjectName": "PERIOD 3: SCIENCE & LAB",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 5,
+      "dayOfWeek": -1,
+      "startHour": 10,
+      "startMinute": 0,
+      "endHour": 10,
+      "endMinute": 30,
+      "subjectName": "RECESS & SNACKS",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 6,
+      "dayOfWeek": -1,
+      "startHour": 10,
+      "startMinute": 30,
+      "endHour": 11,
+      "endMinute": 15,
+      "subjectName": "PERIOD 4: SOCIAL STUDIES",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 7,
+      "dayOfWeek": -1,
+      "startHour": 11,
+      "startMinute": 15,
+      "endHour": 12,
+      "endMinute": 0,
+      "subjectName": "PERIOD 5: COMPUTER LAB",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 8,
+      "dayOfWeek": -1,
+      "startHour": 12,
+      "startMinute": 0,
+      "endHour": 13,
+      "endMinute": 0,
+      "subjectName": "LUNCH BREAK",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 9,
+      "dayOfWeek": -1,
+      "startHour": 13,
+      "startMinute": 0,
+      "endHour": 13,
+      "endMinute": 45,
+      "subjectName": "PERIOD 6: ART & DESIGN",
+      "ringOnStart": true,
+      "ringOnEnd": false,
+      "enabled": true
+    },
+    {
+      "id": 10,
+      "dayOfWeek": -1,
+      "startHour": 13,
+      "startMinute": 45,
+      "endHour": 14,
+      "endMinute": 30,
+      "subjectName": "PERIOD 7: PHYSICAL ED",
+      "ringOnStart": true,
+      "ringOnEnd": true,
+      "enabled": true
+    }
+  ]
+}
