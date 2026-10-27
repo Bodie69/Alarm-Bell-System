@@ -10,7 +10,6 @@ A school bell controller that runs on an ESP32 without needing internet access. 
 - **Offline web dashboard:** the ESP32 runs a SoftAP with a captive portal. From the dashboard you can edit schedules, ring or stop the bell, switch on holiday mode, change brightness and timezone, and view an activity log.
 - **Admin login:** the dashboard sits behind a login that is separate from the Wi-Fi password, and logins are stored as SHA-256 hashes.
 - **Manual bell button:** a physical push button rings the bell on demand. Each ring lasts a fixed 10 seconds.
-- **Browser simulator:** you can try the display and schedule logic in a browser with no hardware.
 
 ## Hardware
 
@@ -59,7 +58,6 @@ Arduino IDE setup, dashboard usage and recovery steps are covered in [`docs/USER
 ```
 src/            Firmware modules (GPS, relay, schedule, display, web server, auth, config, activity log)
 data/           Web UI served from LittleFS (HTML/CSS/JS, gzipped copies, default schedules.json)
-simulator/      Standalone browser simulator. Open simulator/index.html
 tools/          inline_assets.py: inlines CSS/JS into the HTML and regenerates the .gz files
 docs/           User guide and wiring diagram
 ```
