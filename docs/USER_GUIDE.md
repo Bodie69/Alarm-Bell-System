@@ -55,7 +55,13 @@ If using the Arduino IDE (2.x):
    - **Default login**: `admin` / `admin`
    - Change this immediately after your first login, from **System Settings → Admin Login Credentials**.
    - A session stays signed in for up to 8 hours, or until you click **Logout** in the sidebar.
-   - **Recovery if locked out**: credentials are stored on the ESP32's LittleFS filesystem. Re-flashing the filesystem image (`pio run --target uploadfs`) wipes `/config.json` and resets the login back to the `admin` / `admin` default — this also resets timezone, brightness, and default bell duration, but does **not** touch your saved timetable in `/schedules.json`.
+   - **Recovery if locked out**: credentials are stored in the ESP32's NVS (non-volatile settings storage), together with timezone, brightness, and holiday mode. NVS is separate from the LittleFS filesystem, so re-flashing the filesystem image (`pio run --target uploadfs`) does **not** reset the login. To return to the `admin` / `admin` default, erase the whole flash and re-flash both images:
+     ```sh
+     pio run --target erase
+     pio run --target uploadfs
+     pio run --target upload
+     ```
+     This is a full factory reset: timezone, brightness, and holiday mode return to their defaults, and the timetable reverts to the default `data/schedules.json`. Before erasing, back up any timetable you want to keep (while signed in, open `http://192.168.4.1/api/schedule` in the browser and save the JSON as your new `data/schedules.json`).
 5. The dashboard will load instantly from the ESP32's internal flash memory without needing an internet connection.
 
 ---
@@ -78,7 +84,7 @@ The sidebar has five pages: **Dashboard**, **Bell Schedule**, **Manual Bell**, *
 
 ### 🔔 Manual Bell Ringing
 - Navigate to the **Manual Bell** page.
-- Press **🔔 Trigger Bell (5s)** to ring immediately. Every ring — scheduled, manual web, or the physical button — lasts a fixed 5 seconds; there's no pattern or duration to configure.
+- Press **🔔 Trigger Bell** to ring immediately. Every ring — scheduled, manual web, or the physical button — lasts a fixed 10 seconds (`BELL_RING_DURATION_MS` in `src/config.h`); there's no pattern or duration to configure from the dashboard.
 - Press **🛑 Emergency Bell Stop** to abort an ongoing ring immediately.
 - Every manual trigger (from the web UI or the physical button) is recorded in Recent Bell Activity.
 
